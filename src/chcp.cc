@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include <node.h>
+#include <nan.h>
 #include <windows.h>
 
 using v8::FunctionCallbackInfo;
@@ -39,10 +40,10 @@ void SetConsoleCodePage(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
   if (!args[0]->IsNumber()) {
     isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate, "argument should be a number.")));
+        Nan::New("argument should be a number.").ToLocalChecked()));
     return;
   }
-  chcp = static_cast<int>(args[0]->Int32Value());
+  chcp = static_cast<int>(Nan::To<int32_t>(args[0]).ToChecked());
   ret = SetConsoleOutputCP(chcp);
   if (!ret)
     error = GetLastError();

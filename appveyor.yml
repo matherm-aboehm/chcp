@@ -1,0 +1,57 @@
+version: "1.1.{build}"
+skip_branch_with_pr: true
+build: off
+skip_tags: true
+
+environment:
+  matrix:
+    - nodejs_version: 6
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      PYTHON: "C:\\Python27-x64"
+      PYTHON_VERSION: "2.7.x"
+      PYTHON_ARCH: "64"
+    - nodejs_version: 16.13.0
+    - nodejs_version: stable
+    - nodejs_version: lts
+
+platform:
+  - x64
+  - x86
+
+# Install scripts. (runs after repo cloning)
+install:
+  # install Node.js and Python if needed
+  # https://github.com/ogrisel/python-appveyor-demo/blob/master/appveyor/install.ps1
+  - ps: |
+      Install-Product node $env:nodejs_version $env:platform
+      if ((-not([string]::IsNullOrEmpty($env:PYTHON))) -and (-not(Test-Path($env:PYTHON)))) { & appveyor\install.ps1 }
+  # install modules
+  - |
+    IF DEFINED PYTHON SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+    npm install --build-from-source
+
+# to run your custom scripts instead of automatic tests
+test_script:
+  # npm run lint
+  - npm test
+
+# to run your custom scripts instead of provider deployments
+after_test:
+  - npm run build
+
+artifacts:
+  - path: 'build\stage\**\*.tar.gz'
+    name: binding
+
+deploy:
+  provider: GitHub
+  # $(APPVEYOR_REPO_TAG_NAME)
+  tag: v$(APPVEYOR_BUILD_VERSION)
+  auth_token:
+    secure: Xr8MaaNKA3Um4pqKz8SZn9CG3eh1lN9kzHtgwfmxQoFPvq8ZKgdclIvPR7td8N+B
+  # upload binding to release assets
+  artifact: /.*\.tar\.gz/
+  draft: true
+  # on:
+    # deploy on tag push only
+    # appveyor_repo_tag: true
