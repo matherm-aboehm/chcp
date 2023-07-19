@@ -1,3 +1,7 @@
+// Type definitions for chcp 1.1.1
+// Project: https://github.com/ibmruntimes/chcp
+// Definitions by: Andreas Böhm <https://github.com/matherm-aboehm>
+
 /** **********************************************************************
  * Copyright 2018 IBM Corp.
  *
@@ -13,9 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ************************************************************************/
-'use strict';
-var binary = require('node-pre-gyp');
-var bindingPath = binary.find(require.resolve('./package.json'));
-exports = module.exports = require(bindingPath);
-Object.defineProperty(exports, '__esModule', { value: true });
-exports.default = module.exports;
+
+export as namespace chcp;
+
+export function getConsoleCodePage(): number;
+export function setConsoleCodePage(cp: number): number;
+
+declare namespace chcp {
+  export { getConsoleCodePage, setConsoleCodePage }
+}
+
+export default chcp;
