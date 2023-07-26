@@ -23,8 +23,11 @@ export as namespace chcp;
 export function getConsoleCodePage(): number;
 export function setConsoleCodePage(cp: number): number;
 
+declare var _getType: typeof getConsoleCodePage;
+declare var _setType: typeof setConsoleCodePage;
 declare namespace chcp {
-  export { getConsoleCodePage, setConsoleCodePage }
+  //use 'a as b' syntax here to resolve error TS2303 for TypeScript older than 3.7
+  export { _getType as getConsoleCodePage, _setType as setConsoleCodePage }
 }
 
 export default chcp;

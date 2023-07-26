@@ -1,6 +1,6 @@
 {
   "name": "chcp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "index.js",
   "types": "index.d.ts",
   "description": "A JS binding for couple of windows abstractions.",
@@ -15,7 +15,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "node-pre-gyp rebuild --build-from-source && node-pre-gyp package",
     "lint": "eslint . && eclint check src test *.md *.js",
-    "test": "tsd-check && tap test/*.js"
+    "test": "tsc && tsd-check && tap test/*.js"
   },
   "engines": {
     "node": ">= 4.0.0"
@@ -31,13 +31,14 @@
     "test/"
   ],
   "devDependencies": {
-    "@types/node": "^6",
+    "@types/node": "~6.0",
     "@types/tap": "^14.10.0",
     "eclint": "^2.8.1",
-    "eslint": "^6.6.0",
+    "eslint": "^5.16.0",
     "eslint-config-strongloop": "^2.1.0",
     "tap": "^10.7.3",
-    "tsd-check": "^0.5.0"
+    "tsd-check": "^0.5.0",
+    "typescript": "~2.9"
   },
   "dependencies": {
     "nan": "^2.17.0",
@@ -52,5 +53,16 @@
   },
   "os": [
     "win32"
-  ]
+  ],
+  "typeScriptVersion": "2.9",
+  "tsd-check": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es6",
+      "declaration": false,
+      "noImplicitAny": false,
+      "sourceMap": false,
+      "skipLibCheck": false
+    }
+  }
 }
